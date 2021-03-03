@@ -2,26 +2,25 @@
 import ListProduct from './ListProduct';
 import CreateProduct from './CreateProduct';
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Search from "../Search/Search";
 
-function App() {
-  const [listCategory, setListCategory] = useState([]);
+function Product() {
+  const [status, setStatus] = useState(0);
   const [danhMucId, setDanhMucId] = useState(-1);
+  const [listCategory, setListCategory] = useState([]);
   const [product, setProduct] = useState([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
     price: '',
   });
-
   const urlParams = new URLSearchParams(window.location.search);
   const pageInit = urlParams.get('page') != null ? parseInt(urlParams.get('page')) : 1;
   const [page, setPage] = useState(pageInit)
-  const limit = 5;
+  const limit = 6;
   const [click, setClick] = useState(-1);
   useEffect(() => {
     const url = 'https://60122ad75fffd800170894ce.mockapi.io/category';
@@ -40,19 +39,21 @@ function App() {
 
   useEffect(() => {
     const url = 'https://60122ad75fffd800170894ce.mockapi.io/category/' + danhMucId + '/products?limit=' + limit + '&page=' + page;
-    axios({
-      url: url,
-      method: 'GET',
-    })
+    axios.get(url)
       .then((response) => {
-        const { data } = response;
-        setProduct(data);
+          const { data } = response;
+          const duLieuChuaXoa = data.filter((data) => {
+            if (data.status == true) {
+              return true;
+            }
+          })
+          setProduct(duLieuChuaXoa);
       })
       .catch((error) => {
         console.log(error, error.response);
       });
   }, [
-    danhMucId, page
+    danhMucId, page, status
   ]);
 
   const danhMucOnChange = function (event) {
@@ -69,6 +70,17 @@ function App() {
     setPage(page - 1)
   }
 
+  const [dataSearch, setDataSearch] = useState("");
+  const handlerSearch = (e) => {
+    setDataSearch(e.target.value)
+  }
+  const searchaa = (value) => {
+    if (dataSearch == "") {
+      return value;
+    } else if (value.name.toLowerCase().includes(dataSearch.toLowerCase()))
+      return value;
+  }
+
   return (
     <div>
       <Typography>
@@ -80,14 +92,14 @@ function App() {
           danhMucId={danhMucId}
           click={click}
           setClick={setClick} />
-        <div>
-          <label>Danh mục</label>
+        <div style={{ display: 'block' }}>
           <select
-            class="form-select"
+            style={{ width: '25%' }}
+            className="form-control form-control-lg"
             aria-label="Default select example"
             onChange={danhMucOnChange}
             name="category_id">
-            <option>-- Chọn danh mục --</option>
+            <option>Chọn danh mục</option>
             {
               listCategory.map(function (val, idx) {
                 return (
@@ -98,14 +110,22 @@ function App() {
               })
             }
           </select>
+          <Search
+            dataSearch={dataSearch}
+            handlerSearch={handlerSearch} />
         </div>
-
         <ListProduct
           setProduct={setProduct}
           setFormData={setFormData}
           setClick={setClick}
           danhMucId={danhMucId}
-          data={product} />
+          data={product}
+          formData={formData}
+          product={product}
+          searchaa={searchaa}
+          click={click}
+          status={status}
+          setStatus={setStatus} />
 
         <ul className="pagination justify-content-end" style={{ marginLeft: '920px' }}>
           <li className="page-item" onClick={previosPage} >
@@ -123,4 +143,4 @@ function App() {
   );
 }
 
-export default App;
+export default Product;

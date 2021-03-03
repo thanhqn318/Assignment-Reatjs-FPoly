@@ -25,10 +25,15 @@ function CreateProduct({
     axios({
       url: url,
       method: 'POST',
-      data: formData
+      data: {
+        name: formData.name,
+        price: formData.price,
+        status: true
+      }
     })
       .then((response) => {
         const { data } = response;
+        console.log(data)
         setProduct([
           ...product,
           data,
@@ -122,6 +127,7 @@ function CreateProduct({
             Submit
         </Button>
           <Button
+            variant="contained"
             onClick={btnXoaFormOnClick}
             type='reset'
             style={{ marginTop: '20px', marginLeft: '20px' }}

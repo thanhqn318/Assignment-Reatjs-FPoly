@@ -1,21 +1,17 @@
 import { TextField, Button } from "@material-ui/core";
 
-function Search() {
+function Search({ handlerSearch, dataSearch }) {
     return (
         <div>
             <TextField
-                id="outlined-basic"
+                defaultValue="Small"
+                size="small"
+                id="outlined-size-small"
+                variant="outlined"
                 label="Tìm kiếm....."
-                style={{ width: '200px', margin: '10px 10px 10px 0px' }}
-                name='id'
-                variant="outlined" />
-            <Button
-                type='submit'
-                style={{ marginTop: '20px' }}
-                variant='contained'
-                color='primary' >
-                Submit
-            </Button>
+                style={{ width: '25%', margin: '10px 10px 30px 0px' , height: '20px'}}
+                value={dataSearch}
+                onChange={handlerSearch} />
         </div>
     )
 }

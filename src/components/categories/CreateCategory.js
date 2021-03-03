@@ -121,6 +121,7 @@ function CreateCategory({
                         Submit
                     </Button>
                     <Button
+                        variant="contained"
                         onClick = { btnXoaFormOnClick }
                         type = 'reset'
                         style = { { marginTop: '20px', marginLeft: '20px' } } 

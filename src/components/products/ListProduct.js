@@ -14,37 +14,48 @@ import axios from 'axios';
 
 function ListProduct({
   data,
+  product,
   setClick,
+  click,
   setFormData,
+  formData,
   setProduct,
   danhMucId,
+  searchaa,
+  setStatus,
+  status
 }) {
   const onClickHandler = (event, value, index) => {
+    console.log(index, product[index])
     setClick(index);
     setFormData(value);
   }
 
-  const onDeleteProduct = (index) => {
-    const id = data[index].id;
-    const url = 'https://60122ad75fffd800170894ce.mockapi.io/category/'
-      + danhMucId + '/products/' + id;
+  const xoaTamThoiProduct = function (event, index) {
+    event.stopPropagation();
+    console.log(index)
+    const idd = product[index].id;
+    const url = `https://60122ad75fffd800170894ce.mockapi.io/category/${danhMucId}/products/${idd}`;
     axios({
-      method: 'DELETE',
       url: url,
-    }).then((response) => {
-      console.log('response', response);
-      if (response.status == 200) {
-        setProduct((oldState) => {
-          const newState = oldState.filter((val, idx) => {
-            return idx == index ? false : true;
-          });
-
-          return newState;
-        });
+      method: 'PUT',
+      data: {
+        status: false
       }
-    }).catch((error) => {
-      console.log('error', error, error.response);
-    });
+    })
+      .then((response) => {
+        const newCategory = product.map(function (val, idx) {
+          if (idx == index) {
+            return response.data;
+          } else return val;
+        })
+
+        setProduct(newCategory);
+        setStatus(status + 1);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   }
 
   const btnDeleteOnClick = (event, index) => {
@@ -72,7 +83,7 @@ function ListProduct({
           </thead>
           <tbody>
             {
-              data.map((value, index) => {
+              data.filter(searchaa).map((value, index) => {
                 return (
                   <tr
                     onClick={
@@ -84,8 +95,11 @@ function ListProduct({
                     <td>{value.price}</td>
                     <td>
                       <Button
+                        variant="contained"
                         onClick={
-                          (event) => btnDeleteOnClick(event, index)
+                          event => {
+                            xoaTamThoiProduct(event, index)
+                          }
                         }
                         color="secondary">
                         Delete

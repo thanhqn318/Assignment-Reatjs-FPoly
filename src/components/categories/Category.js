@@ -50,7 +50,16 @@ function Category() {
     setPage(page - 1)
   }
 
-
+  const [dataSearch, setDataSearch] = useState("");
+  const handlerSearch = (e) => {
+      setDataSearch(e.target.value)
+  }
+  const searchaa = (value) => {
+      if (dataSearch == "") {
+          return value;
+      } else if (value.name.toLowerCase().includes(dataSearch.toLowerCase()))
+          return value;
+  }
 
   return (
     <div>
@@ -62,12 +71,15 @@ function Category() {
         setFormData={setFormData}
         formData={formData} />
       <hr></hr>
-      <Search />
+      <Search 
+        dataSearch={dataSearch} 
+        handlerSearch={handlerSearch} />
       <ListCategory
         setCategory={setCategory}
         data={category}
         setClick={setClick}
-        setFormData={setFormData} />
+        setFormData={setFormData}
+        searchaa={searchaa} />
 
       <ul className="pagination justify-content-center" style={{ marginLeft: '920px' }} >
         <li className="page-item" onClick={previosPage} >

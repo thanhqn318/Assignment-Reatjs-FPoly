@@ -16,7 +16,7 @@ import {
   Link
 } from "react-router-dom";
 
-function ListCategory({ data, setClick, setFormData, setCategory, click, category, formData }) {
+function ListCategory({ data, setClick, setFormData, setCategory, click, category, formData,searchaa }) {
 
   const onClickHandler = (event, index, value) => {
     setClick(index)
@@ -66,7 +66,7 @@ function ListCategory({ data, setClick, setFormData, setCategory, click, categor
           </thead>
           <tbody>
             {
-              data.map((value, index) => {
+              data.filter(searchaa).map((value, index) => {
                 return (
                   <tr key={index} onClick={
                     (event) => {
@@ -78,13 +78,14 @@ function ListCategory({ data, setClick, setFormData, setCategory, click, categor
                     <td>{value.name}</td>
                     <td>
                       <Button
+                        variant="contained"
                         onClick={
                           (event) => {
                             btnDeleteOnClick(event, value, index);
                           }
                         }
                         color='secondary'>
-                        Xóa
+                        Delete
                        </Button>
                     </td>
                   </tr>
