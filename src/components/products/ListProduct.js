@@ -31,8 +31,7 @@ function ListProduct({
     setFormData(value);
   }
 
-  const xoaTamThoiProduct = function (event, index) {
-    event.stopPropagation();
+  const xoaTamThoiProduct = function (index) {
     console.log(index)
     const idd = product[index].id;
     const url = `https://60122ad75fffd800170894ce.mockapi.io/category/${danhMucId}/products/${idd}`;
@@ -62,7 +61,7 @@ function ListProduct({
     const confirmResult = window.confirm("Xóa?");
 
     if (confirmResult == true) {
-      onDeleteProduct(index);
+      xoaTamThoiProduct(index);
     }
   }
 
@@ -98,7 +97,7 @@ function ListProduct({
                         variant="contained"
                         onClick={
                           event => {
-                            xoaTamThoiProduct(event, index)
+                            btnDeleteOnClick(event, index)
                           }
                         }
                         color="secondary">

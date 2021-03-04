@@ -94,31 +94,44 @@ function RecycleBin() {
   }
 
   const khoiPhucPr = function (event, index) {
-    event.stopPropagation();
-    console.log(index)
-    const idd = product[index].id;
-    const url = `https://60122ad75fffd800170894ce.mockapi.io/category/${danhMucId}/products/${idd}`;
-    axios({
-      url: url,
-      method: 'PUT',
-      data: {
-        status: true
-      }
-    })
-      .then((response) => {
-        const newCategory = product.map(function (val, idx) {
-          if (idx == index) {
-            return response.data;
-          } else return val;
-        })
+    const confirmResult = window.confirm("Bạn có muốn khôi phục?");
 
-        setProduct(newCategory);
-        setStatus(status + 1);
+    event.stopPropagation();
+    if (confirmResult == true) {
+      console.log(index)
+      const idd = product[index].id;
+      const url = `https://60122ad75fffd800170894ce.mockapi.io/category/${danhMucId}/products/${idd}`;
+      axios({
+        url: url,
+        method: 'PUT',
+        data: {
+          status: true
+        }
       })
-      .catch((error) => {
-        console.log(error.response);
-      });
+        .then((response) => {
+          const newPr = product.map(function (val, idx) {
+            if (idx == index) {
+              return response.data;
+            } else return val;
+          })
+
+          setProduct(newPr);
+          setStatus(status + 1);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    }
   }
+
+  const btnDeleteOnClick = (event, index) => {
+    const confirmResult = window.confirm("Bạn có muốn Xóa vĩnh viễn?");
+
+    if (confirmResult == true) {
+      onDeleteProduct(index);
+    }
+  }
+
   return (
     < div >
       <Typography>
@@ -169,11 +182,11 @@ function RecycleBin() {
                         <td>{value.price}</td>
                         <td>
                           <Button
-                            style={{marginRight: '15px'}}
+                            style={{ marginRight: '15px' }}
                             variant="contained"
                             onClick={
                               event => {
-                                onDeleteProduct(index)
+                                btnDeleteOnClick(index)
                               }
                             }
                             color="secondary">

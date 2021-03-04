@@ -16,7 +16,7 @@ import {
   Link
 } from "react-router-dom";
 
-function ListCategory({ data, setClick, setFormData, setCategory, click, category, formData,searchaa }) {
+function ListCategory({ data, setClick, setFormData, setCategory, click, category, formData, searchaa }) {
 
   const onClickHandler = (event, index, value) => {
     setClick(index)
@@ -26,28 +26,31 @@ function ListCategory({ data, setClick, setFormData, setCategory, click, categor
   const btnUpdateOnClick = function () {
     return;
   }
+
   const btnDeleteOnClick = function (event, value, index) {
+    const confirmResult = window.confirm("Xóa?");
     event.stopPropagation();
+    if (confirmResult == true) {
+      const deleteApiUrl = 'https://60122ad75fffd800170894ce.mockapi.io/category/' + value.id;
 
-    const deleteApiUrl = 'https://60122ad75fffd800170894ce.mockapi.io/category/' + value.id;
+      axios.delete(deleteApiUrl)
+        .then(function (response) {
+          const listNew = data.filter(function (val, idx) {
+            if (idx == index) {
+              //Loại bỏ phẩn tử
+              return false;
+            }
 
-    axios.delete(deleteApiUrl)
-      .then(function (response) {
-        const listNew = data.filter(function (val, idx) {
-          if (idx == index) {
-            //Loại bỏ phẩn tử
-            return false;
-          }
+            //Giữ nguyên phần tử
+            return true;
+          });
 
-          //Giữ nguyên phần tử
-          return true;
-        });
-
-        setCategory(listNew);
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+          setCategory(listNew);
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
   }
 
   return (
